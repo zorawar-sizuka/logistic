@@ -2,6 +2,11 @@
 
 import { useEffect, useRef } from "react";
 
+const heroPosterUrl =
+  "https://res.cloudinary.com/dsjuc7wd5/video/upload/so_0,q_auto,w_1600,c_limit/v1780930461/dnp_annnug.jpg";
+const heroVideoUrl =
+  "https://res.cloudinary.com/dsjuc7wd5/video/upload/q_auto:good,w_1600,c_limit/v1780930461/dnp_annnug.mp4";
+
 const Hero = () => {
   const sectionRef = useRef(null);
 
@@ -69,10 +74,13 @@ const Hero = () => {
           muted
           playsInline
           preload="metadata"
-          poster="/images/logistic1.jpg"
+          crossOrigin="anonymous"
+          disablePictureInPicture
+          disableRemotePlayback
+          poster={heroPosterUrl}
           className="absolute w-full h-full object-cover"
         >
-          <source src="/videos/dnp.mp4" type="video/mp4" />
+          <source src={heroVideoUrl} type="video/mp4" />
         </video>
         <div className="absolute inset-0 z-10 bg-black/40" />
       </div>

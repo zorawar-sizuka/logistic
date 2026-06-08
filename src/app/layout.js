@@ -11,8 +11,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const heroPosterUrl =
+  "https://res.cloudinary.com/dsjuc7wd5/video/upload/so_0,q_auto,w_1600,c_limit/v1780930461/dnp_annnug.jpg";
+
 export const metadata = {
-  title: "DNP Logistic",
+  title: "DNP Logistic | Reliable Logistics Solutions",
   description: "Your Cargo, Our Commitment",
 };
 
@@ -22,6 +25,11 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="preload" as="image" href={heroPosterUrl} />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

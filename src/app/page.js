@@ -1,4 +1,4 @@
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 
 import About from "@/components/About";
 import ContactForm from "@/components/Contact";
@@ -6,10 +6,12 @@ import Footer from "@/components/Footer";
 import Hero from "@/components/Hero/Hero";
 import Navbar from "@/components/Navbar";
 
-const Milestones = dynamic(() => import("@/components/Milestone"));
-const Services = dynamic(() => import("@/components/Services"));
-const Map = dynamic(() => import("@/components/Map"));
-const Process = dynamic(() => import("@/components/Process"));
+const Milestones = nextDynamic(() => import("@/components/Milestone"));
+const Services = nextDynamic(() => import("@/components/Services"));
+const Map = nextDynamic(() => import("@/components/Map"));
+const Process = nextDynamic(() => import("@/components/Process"));
+
+export const dynamic = "force-static";
 
 export default function Home() {
   return (
