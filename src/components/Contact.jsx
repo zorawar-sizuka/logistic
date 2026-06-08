@@ -1,4 +1,4 @@
-import React from 'react';
+import Image from "next/image";
 
 const ContactForm = () => {
   return (
@@ -27,9 +27,11 @@ const ContactForm = () => {
           
           {/* Card Background Image */}
           <div className="absolute inset-0 z-0">
-            <img 
-              src="/services/ser_dnp4.avif" 
-              alt="Industrial Warehouse Background" 
+            <Image
+              src="/services/ser_dnp4.avif"
+              alt="Industrial Warehouse Background"
+              fill
+              sizes="(max-width: 1024px) 100vw, 40vw"
               className="w-full h-full object-cover opacity-90"
             />
             {/* Dark gradient overlay so the white text pops aggressively */}

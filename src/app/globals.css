@@ -24,3 +24,44 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes premiumSmoothSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.premium-spin-icon {
+  animation: premiumSmoothSpin 12s linear infinite;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premium-spin-icon,
+  .animate-ping,
+  .animate-bounce {
+    animation: none;
+  }
+}

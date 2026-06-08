@@ -1,5 +1,7 @@
-"use client"
-import React, { useEffect, useRef, useState } from 'react';
+"use client";
+
+import Image from "next/image";
+import { useEffect, useRef } from "react";
 
 // Reusable SVG for the solid Hexagon marker
 const HexagonIcon = ({ className = "w-4 h-4" }) => (
@@ -32,27 +34,72 @@ const processData = [
 
 const Process = () => {
   const wrapperRef = useRef(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const activeStepRef = useRef(null);
+  const progressBarRef = useRef(null);
+  const cardRefs = useRef([]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!wrapperRef.current) return;
-      
-      const rect = wrapperRef.current.getBoundingClientRect();
+    const wrapper = wrapperRef.current;
+
+    if (!wrapper) {
+      return undefined;
+    }
+
+    let frameId = 0;
+
+    const updateProgress = () => {
+      frameId = 0;
+
+      const rect = wrapper.getBoundingClientRect();
       const scrollableDistance = rect.height - window.innerHeight;
       const scrolled = -rect.top;
+      const progress =
+        scrollableDistance <= 0
+          ? 0
+          : Math.max(0, Math.min(1, scrolled / scrollableDistance));
+      const activeStep = progress >= 0.65 ? "03" : progress >= 0.35 ? "02" : "01";
 
-      const progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
-      setScrollProgress(progress);
+      if (progressBarRef.current) {
+        progressBarRef.current.style.width = `${progress * 100}%`;
+      }
+
+      if (activeStepRef.current) {
+        activeStepRef.current.textContent = activeStep;
+      }
+
+      cardRefs.current.forEach((card, index) => {
+        if (!card) {
+          return;
+        }
+
+        const isVisible = progress >= processData[index].threshold;
+
+        card.style.opacity = isVisible ? "1" : "0";
+        card.style.transform = isVisible
+          ? "translate3d(0, 0, 0) scale(1)"
+          : "translate3d(0, 64px, 0) scale(0.95)";
+      });
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); 
+    const handleScroll = () => {
+      if (frameId) {
+        return;
+      }
 
-    return () => window.removeEventListener('scroll', handleScroll);
+      frameId = window.requestAnimationFrame(updateProgress);
+    };
+
+    updateProgress();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      if (frameId) {
+        window.cancelAnimationFrame(frameId);
+      }
+
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
-
-  const activeStep = scrollProgress >= 0.65 ? 3 : scrollProgress >= 0.35 ? 2 : 1;
 
   return (
     // MASSIVE WRAPPER - Base set to dark to blend with the black overlay
@@ -66,9 +113,11 @@ const Process = () => {
             ========================================= */}
         {/* a. The Immersive Image */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src="/images/process_dnp1.avif" 
-            alt="Logistics Terminal Background" 
+          <Image
+            src="/images/process_dnp1.avif"
+            alt="Logistics Terminal Background"
+            fill
+            sizes="100vw"
             className="w-full h-full object-cover mix-blend-luminosity opacity-80"
           />
         </div>
@@ -126,16 +175,13 @@ const Process = () => {
                 
                 {/* Dynamic Center Circle Indicator - Signature Lime Green */}
                 <div className="absolute w-[44px] h-[44px] md:w-[56px] md:h-[56px] bg-[#CE0001] rounded-full flex items-center justify-center shadow-[0_4px_24px_rgba(206,0,1,0.35)] transition-transform duration-300 z-10">
-                  <div className="text-[16px] md:text-[20px] font-bold text-white tracking-tight leading-none">
-                    0{activeStep}
+                  <div ref={activeStepRef} className="text-[16px] md:text-[20px] font-bold text-white tracking-tight leading-none">
+                    01
                   </div>
                 </div>
 
                 {/* Scroll progress bar filling the line */}
-                <div 
-                  className="absolute left-0 top-0 h-full bg-[#1E40AF] rounded-full transition-all duration-[50ms]" 
-                  style={{ width: `${scrollProgress * 100}%` }}
-                />
+                <div ref={progressBarRef} className="absolute left-0 top-0 h-full bg-[#1E40AF] rounded-full transition-all duration-[50ms]" style={{ width: "0%" }} />
               </div>
             </div>
             
@@ -145,16 +191,14 @@ const Process = () => {
               BOTTOM SECTION: SCROLL-REVEALED CARDS
               ========================================= */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {processData.map((step) => {
-              const isVisible = scrollProgress >= step.threshold;
-              
-              return (
+            {processData.map((step, index) => (
                 <div 
-                  key={step.id} 
-                  // Pure white cards pop aggressively against the dark/image background
-                  className={`bg-white rounded-[20px] p-6 sm:p-7 lg:p-10 flex flex-col gap-4 sm:gap-5 md:gap-6 
-                            transition-all duration-[800ms] ease-out shadow-[0_20px_50px_rgba(0,0,0,0.3)]
-                            ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-16 scale-95'}`}
+                  key={step.id}
+                  ref={(element) => {
+                    cardRefs.current[index] = element;
+                  }}
+                  className="bg-white rounded-[20px] p-6 sm:p-7 lg:p-10 flex flex-col gap-4 sm:gap-5 md:gap-6 transition-all duration-[800ms] ease-out shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+                  style={{ opacity: 0, transform: "translate3d(0, 64px, 0) scale(0.95)" }}
                 >
                   
                   {/* REVAMPED LABEL: Signature Green Capsule */}
@@ -174,8 +218,7 @@ const Process = () => {
                     {step.description}
                   </p>
                 </div>
-              );
-            })}
+            ))}
           </div>
 
         </div>

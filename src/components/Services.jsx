@@ -1,5 +1,7 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
+
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 // Reusable Hexagon
 const HexagonIcon = ({ className = "w-4 h-4" }) => (
@@ -97,9 +99,11 @@ const ScrollRevealCard = ({ service, index }) => {
       <div className="group relative w-full h-[280px] sm:h-[360px] md:h-[580px] lg:h-[620px] rounded-[16px] sm:rounded-[24px] overflow-hidden cursor-pointer shadow-sm hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] transition-all duration-700 bg-black">
         
         {/* 1. BACKGROUND IMAGE */}
-        <img 
-          src={service.image} 
-          alt={service.title} 
+        <Image
+          src={service.image}
+          alt={service.title}
+          fill
+          sizes="(max-width: 768px) 50vw, (max-width: 1024px) 50vw, 33vw"
           className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[1800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isCardVisible ? 'scale-100 opacity-70 group-hover:scale-105 group-hover:opacity-60' : 'scale-115 opacity-0'
           }`}
@@ -165,18 +169,6 @@ const Services = () => {
 
   return (
     <section id="services" className="w-full bg-[#f7f8f9] py-20 md:py-32 px-4 sm:px-6 md:px-12 font-sans border-b border-black/[0.03]">
-      
-      {/* Global Style overrides to fix complex hydration-prone CSS rules cleanly */}
-      <style>{`
-        @keyframes premiumSmoothSpin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .premium-spin-icon {
-          animation: premiumSmoothSpin 12s linear infinite;
-        }
-      `}</style>
-
       <div className="max-w-[1400px] mx-auto flex flex-col gap-16 md:gap-28">
         
         {/* =========================================
@@ -220,3 +212,4 @@ const Services = () => {
 };
 
 export default Services;
+
