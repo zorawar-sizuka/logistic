@@ -59,55 +59,73 @@ const servicesData = [
 
 // Independent Card Wrapper Component to isolate viewport entry states
 const ScrollRevealCard = ({ service, index }) => {
-  const [isCardVisible, setIsCardVisible] = useState(false);
   const cardRef = useRef(null);
+  const imageRef = useRef(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsCardVisible(true);
-          observer.disconnect(); // Locks state into view once visible
-        }
-      },
-      { 
-        threshold: 0.12, // Card must be 12% visible to trigger reveal
-        rootMargin: "0px 0px -50px 0px" // Delays trigger slightly so it happens cleanly as you scroll into view
-      }
-    );
+    const card = cardRef.current;
+    const image = imageRef.current;
 
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
+    if (!card || !image) {
+      return undefined;
     }
 
-    return () => observer.disconnect();
-  }, []);
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    const hiddenTranslate = isMobile ? 48 : 100;
+    const hiddenScale = isMobile ? 1.05 : 1.12;
+    const staggerDelay =
+      (index % (isMobile ? 2 : 3)) * (isMobile ? 70 : 100);
 
-  // Compute a smart, staggered delay based on grid row position
-  const staggerDelay = (index % 3) * 100;
+    card.style.opacity = "0";
+    card.style.transform = `translate3d(0, ${hiddenTranslate}px, 0)`;
+    image.style.opacity = "0";
+    image.style.transform = `scale(${hiddenScale})`;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        window.requestAnimationFrame(() => {
+          card.style.transitionDelay = `${staggerDelay}ms`;
+          card.style.opacity = "1";
+          card.style.transform = "translate3d(0, 0, 0)";
+          image.style.opacity = "0.7";
+          image.style.transform = "scale(1)";
+        });
+
+        observer.disconnect();
+      },
+      {
+        threshold: isMobile ? 0.08 : 0.12,
+        rootMargin: isMobile ? "0px 0px -30px 0px" : "0px 0px -50px 0px",
+      },
+    );
+
+    observer.observe(card);
+
+    return () => observer.disconnect();
+  }, [index]);
 
   return (
     <div 
       ref={cardRef}
-      className="transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
-      style={{ 
-        transform: isCardVisible ? 'translateY(0)' : 'translateY(100px)',
-        opacity: isCardVisible ? 1 : 0,
-        transitionDelay: isCardVisible ? `${staggerDelay}ms` : '0ms'
-      }}
+      className="transform-gpu will-change-[transform,opacity] transition-[transform,opacity] duration-700 md:duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+      style={{ opacity: 0, transform: "translate3d(0, 48px, 0)" }}
     >
-      <div className="group relative w-full h-[280px] sm:h-[360px] md:h-[580px] lg:h-[620px] rounded-[16px] sm:rounded-[24px] overflow-hidden cursor-pointer shadow-sm hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] transition-all duration-700 bg-black">
+      <div className="group relative w-full h-[280px] sm:h-[360px] md:h-[580px] lg:h-[620px] rounded-[16px] sm:rounded-[24px] overflow-hidden cursor-pointer shadow-sm md:hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] transition-shadow duration-700 bg-black">
         
         {/* 1. BACKGROUND IMAGE */}
         <Image
+          ref={imageRef}
           src={service.image}
           alt={service.title}
           fill
           quality={72}
           sizes="(max-width: 768px) 50vw, (max-width: 1024px) 50vw, 33vw"
-          className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[1800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isCardVisible ? 'scale-100 opacity-70 group-hover:scale-105 group-hover:opacity-60' : 'scale-115 opacity-0'
-          }`}
+          className="absolute inset-0 w-full h-full object-cover transform-gpu will-change-[transform,opacity] transition-[transform,opacity] duration-700 md:duration-[1400ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:scale-105 md:group-hover:opacity-60"
+          style={{ opacity: 0, transform: "scale(1.05)" }}
         />
         
         {/* 2. BALANCED AMBIENT OVERLAY */}
