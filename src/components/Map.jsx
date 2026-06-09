@@ -177,6 +177,7 @@ const Map = () => {
                       <Image
                         src={region.thumb}
                         alt={region.continent}
+                        unoptimized
                         fill
                         sizes="(max-width: 768px) 56px, 80px"
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover/pin:scale-110"
@@ -228,6 +229,8 @@ const Map = () => {
                     <Image
                       {...logoImageProps}
                       alt="DNP Stamp"
+                      unoptimized
+                      style={{ height: "auto" }}
                       className="w-12 h-auto object-contain shrink-0 rotate-[-12deg]"
                     />
                   </div>
@@ -284,6 +287,8 @@ const Map = () => {
                 <Image
                   {...logoImageProps}
                   alt="DNP Stamp"
+                  unoptimized
+                  style={{ height: "auto" }}
                   className="w-10 h-auto object-contain shrink-0 rotate-[-12deg]"
                 />
               </div>

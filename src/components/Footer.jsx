@@ -50,7 +50,8 @@ const Footer = () => {
               <Image
                 {...logoImageProps}
                 alt="Logix Logo"
-                style={{ width: "auto", height: "auto" }}
+                unoptimized
+                style={{ width: "auto" }}
                 className="h-7 md:h-14 w-auto object-contain"
               />
             </a>

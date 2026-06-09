@@ -34,8 +34,9 @@ const Navbar = () => {
             <Image
               {...logoImageProps}
               alt="DNP Logo"
+              unoptimized
               priority
-              style={{ width: "auto", height: "auto" }}
+              style={{ width: "auto" }}
               className="h-8 md:h-16 w-auto object-contain"
             />
           </a>
@@ -101,7 +102,7 @@ const Navbar = () => {
       >
         <div className="flex justify-between items-center w-full mb-16">
           <a href="#home" className="w-[64px] h-[64px] bg-white rounded-[4px] overflow-hidden flex items-center justify-center hover:opacity-90 transition-opacity duration-300">
-            <Image {...logoImageProps} alt="DNP Logo" className="h-full w-auto object-contain" />
+            <Image {...logoImageProps} alt="DNP Logo" unoptimized style={{ width: "auto" }} className="h-full w-auto object-contain" />
           </a>
           <button
             type="button"

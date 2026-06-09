@@ -103,6 +103,7 @@ const ScrollRevealCard = ({ service, index }) => {
           src={service.image}
           alt={service.title}
           fill
+          quality={72}
           sizes="(max-width: 768px) 50vw, (max-width: 1024px) 50vw, 33vw"
           className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[1800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isCardVisible ? 'scale-100 opacity-70 group-hover:scale-105 group-hover:opacity-60' : 'scale-115 opacity-0'
@@ -212,4 +213,3 @@ const Services = () => {
 };
 
 export default Services;
-
