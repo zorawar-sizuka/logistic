@@ -60,26 +60,26 @@ const servicesData = [
 // Independent Card Wrapper Component to isolate viewport entry states
 const ScrollRevealCard = ({ service, index }) => {
   const cardRef = useRef(null);
-  const imageRef = useRef(null);
+  const imageRevealRef = useRef(null);
 
   useEffect(() => {
     const card = cardRef.current;
-    const image = imageRef.current;
+    const imageReveal = imageRevealRef.current;
 
-    if (!card || !image) {
+    if (!card || !imageReveal) {
       return undefined;
     }
 
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
-    const hiddenTranslate = isMobile ? 48 : 100;
-    const hiddenScale = isMobile ? 1.05 : 1.12;
+    const hiddenTranslate = isMobile ? 28 : 100;
+    const hiddenScale = isMobile ? 1.02 : 1.12;
     const staggerDelay =
-      (index % (isMobile ? 2 : 3)) * (isMobile ? 70 : 100);
+      (index % (isMobile ? 2 : 3)) * (isMobile ? 45 : 100);
 
     card.style.opacity = "0";
     card.style.transform = `translate3d(0, ${hiddenTranslate}px, 0)`;
-    image.style.opacity = "0";
-    image.style.transform = `scale(${hiddenScale})`;
+    imageReveal.style.opacity = "0";
+    imageReveal.style.transform = `scale(${hiddenScale})`;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -91,15 +91,15 @@ const ScrollRevealCard = ({ service, index }) => {
           card.style.transitionDelay = `${staggerDelay}ms`;
           card.style.opacity = "1";
           card.style.transform = "translate3d(0, 0, 0)";
-          image.style.opacity = "0.7";
-          image.style.transform = "scale(1)";
+          imageReveal.style.opacity = "0.7";
+          imageReveal.style.transform = "scale(1)";
         });
 
         observer.disconnect();
       },
       {
         threshold: isMobile ? 0.08 : 0.12,
-        rootMargin: isMobile ? "0px 0px -30px 0px" : "0px 0px -50px 0px",
+        rootMargin: isMobile ? "0px 0px -10px 0px" : "0px 0px -50px 0px",
       },
     );
 
@@ -111,53 +111,60 @@ const ScrollRevealCard = ({ service, index }) => {
   return (
     <div 
       ref={cardRef}
-      className="transform-gpu will-change-[transform,opacity] transition-[transform,opacity] duration-700 md:duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
-      style={{ opacity: 0, transform: "translate3d(0, 48px, 0)" }}
+      className="transform-gpu transition-[transform,opacity] duration-500 md:duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] [contain:layout_paint]"
+      style={{ opacity: 0, transform: "translate3d(0, 28px, 0)" }}
     >
-      <div className="group relative w-full h-[280px] sm:h-[360px] md:h-[580px] lg:h-[620px] rounded-[16px] sm:rounded-[24px] overflow-hidden cursor-pointer shadow-sm md:hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)] transition-shadow duration-700 bg-black">
+      <div className="group relative w-full h-[280px] sm:h-[360px] md:h-[580px] lg:h-[620px] rounded-[16px] sm:rounded-[24px] overflow-hidden cursor-pointer bg-black shadow-[0_10px_20px_rgba(0,0,0,0.12)] md:shadow-sm md:hover:shadow-[0_28px_54px_rgba(0,0,0,0.22)] transition-shadow duration-900 ease-[cubic-bezier(0.16,1,0.3,1)]">
         
         {/* 1. BACKGROUND IMAGE */}
-        <Image
-          ref={imageRef}
-          src={service.image}
-          alt={service.title}
-          fill
-          quality={72}
-          sizes="(max-width: 768px) 50vw, (max-width: 1024px) 50vw, 33vw"
-          className="absolute inset-0 w-full h-full object-cover transform-gpu will-change-[transform,opacity] transition-[transform,opacity] duration-700 md:duration-[1400ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:scale-105 md:group-hover:opacity-60"
-          style={{ opacity: 0, transform: "scale(1.05)" }}
-        />
+        <div
+          ref={imageRevealRef}
+          className="absolute inset-0 transform-gpu transition-[transform,opacity] duration-500 md:duration-[1800ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+          style={{ opacity: 0, transform: "scale(1.01)" }}
+        >
+          <div className="absolute inset-0 transform-gpu [backface-visibility:hidden] transition-transform duration-500 md:duration-[2200ms] ease-[cubic-bezier(0.22,1,0.36,1)] md:group-hover:scale-[1.018]">
+            <Image
+              src={service.image}
+              alt={service.title}
+              fill
+              quality={72}
+              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 50vw, 33vw"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
+        </div>
         
         {/* 2. BALANCED AMBIENT OVERLAY */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/5 to-black/60 transition-all duration-700 group-hover:to-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/5 to-black/60 transition-colors duration-900 ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:to-black/80" />
 
         {/* 3. SHUTTLE BRAND ACTION BUTTON */}
-        <div className="absolute top-3 right-3 md:top-6 md:right-6 w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-[#CE0001] rounded-full flex items-center justify-center text-white z-20 shadow-lg overflow-hidden transform transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:opacity-90 md:group-hover:opacity-100 md:group-hover:scale-105 md:group-hover:bg-[#1E40AF]">
-          <div className="relative w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-6 group-hover:-translate-y-6">
+        <div className="absolute top-3 right-3 md:top-6 md:right-6 w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-[#CE0001] rounded-full flex items-center justify-center text-white z-20 shadow-md md:shadow-lg overflow-hidden transform-gpu will-change-[transform,opacity] transition-[transform,opacity,background-color] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:opacity-90 md:group-hover:opacity-100 md:group-hover:scale-[1.03] md:group-hover:bg-[#1E40AF]">
+          <div className="relative w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center transform-gpu transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:translate-x-5 md:group-hover:-translate-y-5">
             <ArrowUpRightIcon className="absolute w-full h-full text-white" />
-            <ArrowUpRightIcon className="absolute w-full h-full text-white -translate-x-6 translate-y-6" />
+            <ArrowUpRightIcon className="absolute w-full h-full text-white -translate-x-5 translate-y-5" />
           </div>
         </div>
 
         {/* 4. FLOATING FROSTED-GLASS BLOCK */}
         <div className="absolute inset-x-2 bottom-2 sm:inset-x-4 sm:bottom-4 md:inset-x-6 md:bottom-6 z-10">
-          <div className="rounded-[12px] sm:rounded-[20px] border border-white/10 sm:border-white/15 bg-white/[0.06] backdrop-blur-xl p-3 sm:p-5 md:p-8 shadow-[0_15px_35px_rgba(0,0,0,0.25)] transform transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:translate-y-4 md:group-hover:translate-y-0 md:group-hover:bg-white/[0.12] md:group-hover:border-white/25">
-            
-            {/* Small Title Identifier */}
-            <div className="text-white/70 text-[9px] sm:text-[11px] md:text-[12px] font-bold tracking-[0.12em] sm:tracking-[0.16em] uppercase mb-1.5 sm:mb-2 md:mb-4 transition-colors duration-500 group-hover:text-white">
-              {service.title}
+          <div className="transform-gpu will-change-transform transition-transform duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] md:translate-y-3 md:group-hover:translate-y-0">
+            <div className="rounded-[12px] sm:rounded-[20px] border border-white/10 sm:border-white/15 bg-black/45 sm:bg-white/[0.06] backdrop-blur-0 sm:backdrop-blur-xl p-3 sm:p-5 md:p-8 shadow-[0_8px_18px_rgba(0,0,0,0.18)] md:shadow-[0_15px_35px_rgba(0,0,0,0.25)] transition-[background-color,border-color] duration-900 ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:bg-white/[0.12] md:group-hover:border-white/25">
+
+              {/* Small Title Identifier */}
+              <div className="text-white/70 text-[9px] sm:text-[11px] md:text-[12px] font-bold tracking-[0.12em] sm:tracking-[0.16em] uppercase mb-1.5 sm:mb-2 md:mb-4 transition-colors duration-500 md:group-hover:text-white">
+                {service.title}
+              </div>
+
+              {/* Main Description Statement */}
+              <p className="hidden sm:block text-white/90 text-[16px] md:text-[22px] font-normal leading-[1.35] tracking-tight whitespace-normal transition-colors duration-500 md:group-hover:text-white">
+                {service.description}
+              </p>
             </div>
-
-            {/* Main Description Statement */}
-            <p className="text-white/90 text-[12px] sm:text-[16px] md:text-[22px] font-normal leading-[1.3] sm:leading-[1.35] tracking-tight whitespace-normal transition-colors duration-500 group-hover:text-white">
-              {service.description}
-            </p>
-
           </div>
         </div>
 
         {/* 5. HOVER ACCENT LINE LAYER */}
-        <div className="absolute bottom-0 left-0 h-[3px] bg-gradient-to-r from-[#1E40AF] to-[#CE0001] w-0 transition-all duration-700 ease-out group-hover:w-full" />
+        <div className="absolute bottom-0 left-0 h-[3px] w-full origin-left scale-x-0 bg-gradient-to-r from-[#1E40AF] to-[#CE0001] transform-gpu transition-transform duration-900 ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:scale-x-100" />
 
       </div>
     </div>
