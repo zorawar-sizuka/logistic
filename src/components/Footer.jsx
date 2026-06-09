@@ -1,5 +1,11 @@
 import Image from "next/image";
 
+const logoImageProps = {
+  src: "/images/dnp.png",
+  width: 1538,
+  height: 1022,
+};
+
 // Reusable SVG for the arrow inside the Submit button
 const ArrowUpRightIcon = ({ className = "w-[14px] h-[14px]" }) => (
   <svg viewBox="0 0 24 24" fill="none" className={className} stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -42,11 +48,9 @@ const Footer = () => {
               className="flex items-center hover:opacity-75 transition-opacity duration-300"
             >
               <Image
-                src="/images/dnp.png"
+                {...logoImageProps}
                 alt="Logix Logo"
-                width={140}
-                height={56}
-                style={{ width: "auto" }}
+                style={{ width: "auto", height: "auto" }}
                 className="h-7 md:h-14 w-auto object-contain"
               />
             </a>

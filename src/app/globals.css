@@ -25,6 +25,16 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.hero-media-layer {
+  background-image: url("https://res.cloudinary.com/dsjuc7wd5/video/upload/so_0,q_auto,w_1600,c_limit/v1780930461/dnp_annnug.jpg");
+}
+
+@media (max-width: 767px) {
+  .hero-media-layer {
+    background-image: url("https://res.cloudinary.com/dsjuc7wd5/video/upload/so_0,q_auto,w_960,c_limit/v1780930461/dnp_annnug.jpg");
+  }
+}
+
 @keyframes premiumSmoothSpin {
   from {
     transform: rotate(0deg);

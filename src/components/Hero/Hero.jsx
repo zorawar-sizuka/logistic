@@ -4,30 +4,58 @@ import { useEffect, useRef } from "react";
 
 const heroPosterUrl =
   "https://res.cloudinary.com/dsjuc7wd5/video/upload/so_0,q_auto,w_1600,c_limit/v1780930461/dnp_annnug.jpg";
+const heroMobileVideoUrl =
+  "https://res.cloudinary.com/dsjuc7wd5/video/upload/ac_none,q_auto:good,w_960,c_limit/v1780930461/dnp_annnug.mp4";
 const heroVideoUrl =
-  "https://res.cloudinary.com/dsjuc7wd5/video/upload/q_auto:good,w_1600,c_limit/v1780930461/dnp_annnug.mp4";
+  "https://res.cloudinary.com/dsjuc7wd5/video/upload/ac_none,q_auto:good,w_1600,c_limit/v1780930461/dnp_annnug.mp4";
 
 const Hero = () => {
   const sectionRef = useRef(null);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     const section = sectionRef.current;
+    const video = videoRef.current;
 
-    if (!section) {
+    if (!section || !video) {
       return undefined;
     }
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isIOS =
+      /iPad|iPhone|iPod/.test(window.navigator.userAgent) ||
+      (window.navigator.platform === "MacIntel" && window.navigator.maxTouchPoints > 1);
+
+    if (prefersReducedMotion) {
+      section.style.setProperty("--hero-video-opacity", "0");
+      section.style.setProperty("--hero-background-offset", "0px");
+      section.style.setProperty("--hero-content-offset", "0px");
       return undefined;
     }
 
     let frameId = 0;
 
+    const showPoster = () => {
+      section.style.setProperty("--hero-video-opacity", "0");
+    };
+
+    const showVideo = () => {
+      section.style.setProperty("--hero-video-opacity", "1");
+    };
+
     const updateScrollStyles = () => {
       frameId = 0;
 
       const offsetY = window.scrollY;
-      section.style.setProperty("--hero-offset-y", `${offsetY}px`);
+
+      if (isIOS) {
+        section.style.setProperty("--hero-background-offset", "0px");
+        section.style.setProperty("--hero-content-offset", "0px");
+      } else {
+        section.style.setProperty("--hero-background-offset", `${offsetY * 0.4}px`);
+        section.style.setProperty("--hero-content-offset", `${offsetY * -0.15}px`);
+      }
+
       section.style.setProperty(
         "--hero-indicator-opacity",
         `${Math.max(1 - offsetY / 300, 0)}`,
@@ -42,8 +70,32 @@ const Hero = () => {
       frameId = window.requestAnimationFrame(updateScrollStyles);
     };
 
+    const tryPlayVideo = () => {
+      video.defaultMuted = true;
+      video.muted = true;
+
+      const playAttempt = video.play();
+
+      if (typeof playAttempt?.then === "function") {
+        playAttempt.then(showVideo).catch(showPoster);
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible" && video.paused) {
+        tryPlayVideo();
+      }
+    };
+
+    showPoster();
     updateScrollStyles();
+    tryPlayVideo();
+
     window.addEventListener("scroll", handleScroll, { passive: true });
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    video.addEventListener("playing", showVideo);
+    video.addEventListener("loadeddata", tryPlayVideo);
+    video.addEventListener("error", showPoster);
 
     return () => {
       if (frameId) {
@@ -51,6 +103,10 @@ const Hero = () => {
       }
 
       window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      video.removeEventListener("playing", showVideo);
+      video.removeEventListener("loadeddata", tryPlayVideo);
+      video.removeEventListener("error", showPoster);
     };
   }, []);
 
@@ -59,27 +115,43 @@ const Hero = () => {
       id="home"
       ref={sectionRef}
       style={{
-        "--hero-offset-y": "0px",
+        "--hero-background-offset": "0px",
+        "--hero-content-offset": "0px",
         "--hero-indicator-opacity": 1,
+        "--hero-video-opacity": 0,
       }}
       className="relative flex min-h-[100svh] w-full flex-col items-center justify-center overflow-hidden bg-[#111] text-center font-sans"
     >
       <div
-        className="absolute inset-0 z-0 w-full h-[120vh] -top-[10vh] will-change-transform"
-        style={{ transform: "translate3d(0, calc(var(--hero-offset-y) * 0.4), 0)" }}
+        className="hero-media-layer absolute inset-0 z-0 w-full h-[120vh] -top-[10vh] will-change-transform"
+        style={{
+          transform: "translate3d(0, var(--hero-background-offset), 0)",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+        }}
       >
         <video
+          ref={videoRef}
           autoPlay
           loop
           muted
           playsInline
-          preload="metadata"
+          preload="auto"
           crossOrigin="anonymous"
+          controls={false}
+          aria-hidden="true"
+          tabIndex={-1}
           disablePictureInPicture
           disableRemotePlayback
           poster={heroPosterUrl}
-          className="absolute w-full h-full object-cover"
+          className="absolute w-full h-full object-cover transition-opacity duration-500"
+          style={{ opacity: "var(--hero-video-opacity)" }}
         >
+          <source
+            media="(max-width: 767px)"
+            src={heroMobileVideoUrl}
+            type="video/mp4"
+          />
           <source src={heroVideoUrl} type="video/mp4" />
         </video>
         <div className="absolute inset-0 z-10 bg-black/40" />
@@ -96,7 +168,7 @@ const Hero = () => {
 
       <div
         className="relative z-20 w-full max-w-5xl mx-auto flex flex-col items-center px-4 sm:px-6 md:px-8 mt-12 md:mt-16 will-change-transform"
-        style={{ transform: "translate3d(0, calc(var(--hero-offset-y) * -0.15), 0)" }}
+        style={{ transform: "translate3d(0, var(--hero-content-offset), 0)" }}
       >
         <h1 className="text-[44px] sm:text-[56px] md:text-[72px] lg:text-[84px] font-medium tracking-[-0.03em] text-white leading-[1.1] sm:leading-[1.05]">
           Intelligent

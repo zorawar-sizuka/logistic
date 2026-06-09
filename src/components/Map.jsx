@@ -4,6 +4,12 @@
 import Image from "next/image";
 import { useState } from "react";
 
+const logoImageProps = {
+  src: "/images/dnp.png",
+  width: 1538,
+  height: 1022,
+};
+
 // Reusable Hexagon Icon for UI elements
 const HexagonIcon = ({ className = "w-4 h-4" }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -143,9 +149,13 @@ const Map = () => {
               >
                 
                 {/* HIGH-FIDELITY MAP PIN DROPDOWN ANCHOR */}
-                <div 
-                  className="relative flex flex-col items-center cursor-pointer group/pin select-none"
+                <button
+                  type="button"
+                  aria-label={`View ${region.continent} logistics coverage`}
+                  aria-pressed={activeNode === region.id}
+                  className="relative flex flex-col items-center cursor-pointer group/pin select-none border-0 bg-transparent p-0"
                   onMouseEnter={() => handleActiveNodeChange(region.id)}
+                  onFocus={() => handleActiveNodeChange(region.id)}
                   onClick={() => handleActiveNodeChange(region.id)}
                   style={{ transform: 'translate(-50%, -85%)' }} 
                 >
@@ -191,7 +201,7 @@ const Map = () => {
                          transform: activeNode === region.id ? 'scale(1.3)' : 'scale(1)'
                        }} 
                   />
-                </div>
+                </button>
 
                 {/* =========================================
                     DESKTOP DISPLAY DECK: GLASSMORPHIC TOOLTIPS 
@@ -216,11 +226,9 @@ const Map = () => {
                       {region.countriesSupported} countries supported.
                     </h3>
                     <Image
-                      src="/images/dnp.png"
+                      {...logoImageProps}
                       alt="DNP Stamp"
-                      width={48}
-                      height={48}
-                      className="w-12 h-12 object-contain shrink-0 rotate-[-12deg]"
+                      className="w-12 h-auto object-contain shrink-0 rotate-[-12deg]"
                     />
                   </div>
 
@@ -274,11 +282,9 @@ const Map = () => {
                   {activeRegionData.countriesSupported} Active Trade Routes
                 </h4>
                 <Image
-                  src="/images/dnp.png"
+                  {...logoImageProps}
                   alt="DNP Stamp"
-                  width={40}
-                  height={40}
-                  className="w-10 h-10 object-contain shrink-0 rotate-[-12deg]"
+                  className="w-10 h-auto object-contain shrink-0 rotate-[-12deg]"
                 />
               </div>
 
