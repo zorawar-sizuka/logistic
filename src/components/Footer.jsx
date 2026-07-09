@@ -22,7 +22,7 @@ const CheckIcon = () => (
   </svg>
 );
 
-const CopyableCard = ({ label, value }) => {
+const CopyableRow = ({ label, value }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -36,21 +36,48 @@ const CopyableCard = ({ label, value }) => {
   };
 
   return (
-    <div className="rounded-[18px] border border-white/8 bg-white/5 px-4 py-3 flex flex-col gap-1.5 min-w-0 transition-all duration-300 hover:border-white/15">
-      <div className="flex items-center justify-between gap-2 w-full">
-        <span className="text-[10px] uppercase tracking-[0.16em] text-white/45">{label}</span>
-        <button
-          onClick={handleCopy}
-          className="flex items-center justify-center w-6 h-6 rounded-md bg-white/5 border border-white/10 hover:bg-[#1E40AF] hover:border-[#1E40AF] text-[#c9c9c9] hover:text-white transition-all shrink-0 active:scale-95 cursor-pointer"
-          title={`Copy ${label}`}
-          aria-label={`Copy ${label}`}
-        >
-          {copied ? <CheckIcon /> : <CopyIcon />}
-        </button>
-      </div>
-      <div className="text-white text-[14px] font-medium select-all break-all" title={value}>
+    <div className="flex items-center gap-3 text-white text-[14px] min-w-0 transition-all duration-300">
+      <span className="text-white/45 font-medium min-w-[70px] uppercase tracking-wider text-[11px] shrink-0">{label}:</span>
+      <span className="select-all font-medium whitespace-nowrap min-w-0 overflow-x-auto custom-scrollbar pr-2" title={value}>{value}</span>
+      <button
+        onClick={handleCopy}
+        className="flex items-center justify-center w-5 h-5 rounded bg-white/5 border border-white/10 hover:bg-[#1E40AF] hover:border-[#1E40AF] text-[#c9c9c9] hover:text-white transition-all shrink-0 active:scale-95 cursor-pointer"
+        title={`Copy ${label}`}
+        aria-label={`Copy ${label}`}
+      >
+        {copied ? <CheckIcon /> : <CopyIcon />}
+      </button>
+    </div>
+  );
+};
+
+const CopyableAddressRow = ({ label, value }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
+
+  return (
+    <div className="flex items-start gap-3 text-white text-[14px] min-w-0 transition-all duration-300">
+      <span className="text-white/45 font-medium min-w-[70px] uppercase tracking-wider text-[11px] shrink-0 mt-[3px]">{label}:</span>
+      <span className="select-all font-medium min-w-0 line-clamp-3 break-normal leading-relaxed pr-2" title={value}>
         {value}
-      </div>
+      </span>
+      <button
+        onClick={handleCopy}
+        className="flex items-center justify-center w-5 h-5 rounded bg-white/5 border border-white/10 hover:bg-[#1E40AF] hover:border-[#1E40AF] text-[#c9c9c9] hover:text-white transition-all shrink-0 active:scale-95 cursor-pointer mt-[1px]"
+        title={`Copy ${label}`}
+        aria-label={`Copy ${label}`}
+      >
+        {copied ? <CheckIcon /> : <CopyIcon />}
+      </button>
     </div>
   );
 };
@@ -91,13 +118,10 @@ const Footer = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 gap-4 text-[14px] text-[#c9c9c9]">
-              <CopyableCard label="Phone" value="+91 8750939543" />
-              <CopyableCard label="Email" value="info@dnplogistic.co" />
-              <div className="rounded-[18px] border border-white/8 bg-white/5 px-4 py-3 sm:col-span-3 lg:col-span-1 xl:col-span-1 min-w-0 transition-all duration-300 hover:border-white/15">
-                <div className="text-[10px] uppercase tracking-[0.16em] text-white/45 mb-1">Address</div>
-                <div className="text-white text-[14px] leading-relaxed">8/2 East Guru Angad Nagar, Laxmi Nagar, East Delhi, Delhi-110092, India</div>
-              </div>
+            <div className="flex flex-col gap-3.5 text-[14px] text-[#c9c9c9] mt-2">
+              <CopyableRow label="Phone" value="+91 8750939543" />
+              <CopyableRow label="Email" value="info@dnplogistic.co" />
+              <CopyableAddressRow label="Address" value="8/2 East Guru Angad Nagar, Laxmi Nagar, East Delhi, Delhi-110092, India" />
             </div>
           </div>
         </div>
