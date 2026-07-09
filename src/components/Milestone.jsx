@@ -95,11 +95,11 @@ const Milestones = () => {
         {/* =========================================
             RIGHT COLUMN: TECHNICAL DATA GRID
             ========================================= */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 grow border-t border-black/[0.06] md:border-t-0 md:border-l border-black/[0.06] pl-0 md:pl-12 lg:pl-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 grow border-t border-black/[0.06] md:border-t-0 md:border-l border-black/[0.06] pl-0 md:pl-6 lg:pl-12 xl:pl-16">
           {milestoneData.map((item, index) => (
             <div 
               key={item.id} 
-              className={`flex flex-col gap-6 pt-10 pb-10 md:py-4 md:px-8 border-b border-black/[0.06] md:border-b-0 ${
+              className={`flex flex-col gap-6 pt-10 pb-10 md:py-4 md:px-4 lg:px-8 border-b border-black/[0.06] md:border-b-0 ${
                 index !== 2 ? 'md:border-r border-black/[0.06]' : ''
               } transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]`}
               style={{ 
@@ -115,7 +115,7 @@ const Milestones = () => {
               </div>
               
               {/* Massive Minimalist Numbers */}
-              <div className="text-[64px] sm:text-[76px] lg:text-[88px] font-light tracking-[-0.04em] text-[#111] leading-none flex items-baseline">
+              <div className="text-[56px] sm:text-[68px] md:text-[44px] lg:text-[60px] xl:text-[76px] font-light tracking-[-0.04em] text-[#111] leading-none flex items-baseline">
                 {isVisible ? (
                   <CountUp 
                     end={item.endValue} 
@@ -127,7 +127,7 @@ const Milestones = () => {
                 ) : (
                   item.decimals ? `0.0` : `0`
                 )}
-                <span className="text-[#111]/25 font-light ml-0.5 text-[40px] lg:text-[50px] select-none">
+                <span className="text-[#111]/25 font-light ml-0.5 text-[28px] md:text-[22px] lg:text-[32px] xl:text-[40px] select-none">
                   {item.suffix}
                 </span>
               </div>
