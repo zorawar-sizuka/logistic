@@ -5,6 +5,7 @@ import ContactForm from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero/Hero";
 import Navbar from "@/components/Navbar";
+import WhatsAppDock from "@/components/WhatsAppDock";
 
 const Milestones = nextDynamic(() => import("@/components/Milestone"));
 const Services = nextDynamic(() => import("@/components/Services"));
@@ -25,6 +26,7 @@ export default function Home() {
       <Process />
       <ContactForm />
       <Footer />
+      <WhatsAppDock />
     </main>
   );
 }

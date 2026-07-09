@@ -28,7 +28,7 @@ const ContactForm = () => {
     e.preventDefault();
 
     // Client target phone number (Country code included, omit symbols or zeros)
-    const targetWhatsAppNumber = "+91 8750939543"; 
+    const targetWhatsAppNumber = "+918750939543"; 
 
     // Constructing a beautifully structured editorial markdown layout template for the client
     const messageTemplate = 
