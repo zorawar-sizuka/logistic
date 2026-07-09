@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 
 const heroPosterUrl =
   "https://res.cloudinary.com/dsjuc7wd5/video/upload/so_0,q_auto,w_1600,c_limit/v1780930461/dnp_annnug.jpg";
+const heroMobilePosterUrl =
+  "https://res.cloudinary.com/dsjuc7wd5/image/upload/v1783618407/dnp_mobile_qnxlop.jpg";
 const heroMobileVideoUrl =
   "https://res.cloudinary.com/dsjuc7wd5/video/upload/ac_none,q_auto:best,w_1280,c_limit/v1780930461/dnp_annnug.mp4";
 const heroVideoUrl =
@@ -20,6 +22,9 @@ const Hero = () => {
     if (!section || !video) {
       return undefined;
     }
+
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    video.setAttribute("poster", isMobile ? heroMobilePosterUrl : heroPosterUrl);
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isIOS =
