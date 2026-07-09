@@ -75,10 +75,22 @@ const Hero = () => {
       video.defaultMuted = true;
       video.muted = true;
 
-      const playAttempt = video.play();
+      try {
+        const playAttempt = video.play();
 
-      if (typeof playAttempt?.then === "function") {
-        playAttempt.then(showVideo).catch(showPoster);
+        if (playAttempt !== undefined) {
+          playAttempt
+            .then(showVideo)
+            .catch((err) => {
+              console.warn("Video autoplay prevented:", err);
+              showPoster();
+            });
+        } else {
+          showVideo();
+        }
+      } catch (err) {
+        console.error("Video play failed:", err);
+        showPoster();
       }
     };
 
@@ -95,6 +107,7 @@ const Hero = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     document.addEventListener("visibilitychange", handleVisibilityChange);
     video.addEventListener("playing", showVideo);
+    video.addEventListener("pause", showPoster);
     video.addEventListener("loadeddata", tryPlayVideo);
     video.addEventListener("error", showPoster);
 
@@ -106,6 +119,7 @@ const Hero = () => {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       video.removeEventListener("playing", showVideo);
+      video.removeEventListener("pause", showPoster);
       video.removeEventListener("loadeddata", tryPlayVideo);
       video.removeEventListener("error", showPoster);
     };

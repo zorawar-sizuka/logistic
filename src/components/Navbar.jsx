@@ -96,8 +96,8 @@ const Navbar = () => {
       <div
         id="mobile-navigation"
         aria-hidden={!isMobileMenuOpen}
-        className={`fixed inset-0 z-[100] bg-white text-[#111] flex flex-col px-6 py-8 transition-transform duration-700 ease-[cubic-bezier(0.87,0,0.13,1)] ${
-          isMobileMenuOpen ? "translate-y-0" : "-translate-y-full pointer-events-none"
+        className={`fixed inset-0 z-[100] bg-white text-[#111] flex flex-col px-6 py-8 transition-transform duration-700 ease-[cubic-bezier(0.87,0,0.13,1)] md:hidden ${
+          isMobileMenuOpen ? "translate-y-0" : "-translate-y-full pointer-events-none invisible"
         }`}
       >
         <div className="flex justify-between items-center w-full mb-16">
