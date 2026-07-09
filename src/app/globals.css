@@ -32,6 +32,8 @@ body {
 @media (max-width: 767px) {
   .hero-media-layer {
     background-image: url("https://res.cloudinary.com/dsjuc7wd5/image/upload/v1783618407/dnp_mobile_qnxlop.jpg");
+    height: 100% !important;
+    top: 0 !important;
   }
 }
 
