@@ -103,20 +103,20 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-white/5 pt-6 flex flex-col sm:flex-row items-center justify-between gap-6 w-full mt-2">
-          <span className="text-[13px] font-light text-[#666]">
-            © 2026 DNP Inc. All rights reserved.
-          </span>
-
           <a
             href="https://www.asofttechnologies.org/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:flex items-center gap-2 bg-white px-4 py-2 rounded-md hover:bg-gray-100 transition-colors duration-300 cursor-pointer"
+            className="flex items-center gap-2 bg-white px-4 py-2 rounded-md hover:bg-gray-100 transition-colors duration-300 cursor-pointer"
           >
             <span className="text-[12px] font-bold text-black tracking-tight">
               Crafted by Asoft
             </span>
           </a>
+
+          <span className="text-[13px] font-light text-[#666]">
+            © 2026 DNP Inc. All rights reserved.
+          </span>
         </div>
       </div>
     </footer>

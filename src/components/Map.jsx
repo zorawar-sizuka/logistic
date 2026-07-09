@@ -137,6 +137,7 @@ const Map = () => {
               src="/images/worldmap.jpg"
               alt="World Logistics Map"
               fill
+              priority
               sizes="100vw"
               className="absolute inset-0 w-full h-full object-contain pointer-events-none opacity-90 mix-blend-darken"
             />
