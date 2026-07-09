@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 const heroPosterUrl =
   "https://res.cloudinary.com/dsjuc7wd5/video/upload/so_0,q_auto,w_1600,c_limit/v1780930461/dnp_annnug.jpg";
 const heroMobileVideoUrl =
-  "https://res.cloudinary.com/dsjuc7wd5/video/upload/ac_none,q_auto:good,w_960,c_limit/v1780930461/dnp_annnug.mp4";
+  "https://res.cloudinary.com/dsjuc7wd5/video/upload/ac_none,q_auto:best,w_1280,c_limit/v1780930461/dnp_annnug.mp4";
 const heroVideoUrl =
   "https://res.cloudinary.com/dsjuc7wd5/video/upload/ac_none,q_auto:good,w_1600,c_limit/v1780930461/dnp_annnug.mp4";
 
@@ -47,8 +47,9 @@ const Hero = () => {
       frameId = 0;
 
       const offsetY = window.scrollY;
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
-      if (isIOS) {
+      if (isIOS || isMobile) {
         section.style.setProperty("--hero-background-offset", "0px");
         section.style.setProperty("--hero-content-offset", "0px");
       } else {
